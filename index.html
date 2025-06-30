@@ -211,15 +211,14 @@
       right: 0;
     }
 
-    /* Điều chỉnh CSS cho thẻ img chung */
+    /* Điều chỉnh CSS cho thẻ img chung (ảnh ngoài carousel) */
     img {
       width: 100%;
       height: auto; /* Chiều cao tự động theo tỷ lệ */
       object-fit: contain; /* Đảm bảo toàn bộ ảnh hiển thị, có thể có khoảng trắng */
-      /* max-height: none; */ /* Bỏ giới hạn chiều cao tối đa nếu muốn ảnh hiển thị đầy đủ */
       border-radius: 5px;
       box-shadow: 0 4px 12px var(--shadow-light);
-      transition: transform 1.0s ease, opacity 0.4s ease;
+      transition: transform 0.4s ease, opacity 0.6s ease;
       opacity: 0; /* Mặc định ẩn để dùng hiệu ứng reveal */
       transform: translateY(40px);
       margin: 2rem 0;
@@ -333,11 +332,11 @@
     }
 
     section.in-view h2 span {
-      animation: reveal-text-clip 2.5s ease-in-out forwards 0s;
+      animation: reveal-text-clip 1s ease-in-out forwards 0.2s;
     }
 
     section.in-view p span {
-      animation: reveal-text-clip 2s ease-in-out forwards 0.4s;
+      animation: reveal-text-clip 1.5s ease-in-out forwards 0.4s;
     }
 
     @keyframes reveal-text-clip {
@@ -349,7 +348,7 @@
       }
     }
 
-    /* CSS cho Carousel ảnh - Đã cập nhật */
+    /* --- CSS cho Carousel ảnh --- */
     .image-carousel-section {
       overflow: hidden;
       padding: 1.5rem;
@@ -362,56 +361,55 @@
 
     .image-carousel {
       width: 100%;
-      margin: 4rem auto 1rem auto; /* Điều chỉnh margin bottom để tạo không gian cho dots */
+      margin: 4rem auto 1rem auto;
       position: relative;
       overflow: hidden;
       border: 5px solid var(--vintage-dark);
       border-radius: 10px;
       box-shadow: 0 8px 16px var(--shadow-dark);
       background-color: var(--vintage-paper);
-      padding: 10px;
+      padding: 10px; /* Padding chung cho khung carousel */
       cursor: grab;
-      height: 450px;
-      display: flex; /* Giữ nguyên flex để kéo ảnh */
-      align-items: center;
-    }
-
-    .image-carousel:active {
-      cursor: grabbing;
+      display: flex;
+      align-items: flex-start;
+      transition: height 0.3s ease-in-out;
     }
 
     .carousel-inner {
+      /* THAY ĐỔI: Loại bỏ position: absolute và top/left/right/bottom */
+      position: relative; /* Quan trọng: Giữ relative để flexbox hoạt động đúng */
+      width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của .image-carousel - padding */
+      height: 100%; /* Quan trọng: Đảm bảo chiếm toàn bộ chiều cao của .image-carousel - padding */
       display: flex;
-      height: 100%;
       will-change: transform;
-      transition: transform 0.5s ease-in-out; /* Đảm bảo transition cho việc chuyển slide */
-      /* Tính toán lại width để bù cho padding của .carousel-item */
-      width: calc(100% * var(--total-carousel-items));
+      transition: transform 0.5s ease-in-out;
+      /* min-width: 100% của carousel-item sẽ tự hoạt động với flexbox */
     }
 
     .carousel-item {
-      min-width: 100%; /* Mỗi item chiếm 100% chiều rộng của carousel */
-      height: 100%;
+      min-width: 100%; /* Giữ nguyên, mỗi item chiếm 100% chiều rộng của carousel-inner */
+      flex-shrink: 0;
+      position: relative;
+      height: 100%; /* Quan trọng: Đảm bảo item chiếm toàn bộ chiều cao của carousel-inner */
       display: flex;
-      justify-content: center; /* Căn giữa theo chiều ngang */
-      align-items: center; /* Căn giữa theo chiều dọc */
-      flex-shrink: 0; /* Quan trọng: Ngăn không cho các item bị co lại */
-      padding-left: 10px; /* Thêm khoảng cách bên trái */
-      padding-right: 10px; /* Thêm khoảng cách bên phải */
-      box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước tổng của item */
+      justify-content: center;
+      align-items: center; /* Quan trọng: căn giữa ảnh theo chiều dọc */
+      overflow: hidden;
+      background-color: transparent;
     }
 
+    /* Đã giữ nguyên như bản sửa đổi cuối cùng - .carousel-item img */
     .carousel-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Đảm bảo toàn bộ ảnh hiển thị, thêm khoảng trắng nếu cần */
+      width: 100%; /* Buộc ảnh lấp đầy chiều rộng của carousel-item */
+      height: 100%; /* Buộc ảnh lấp đầy chiều cao của carousel-item */
+      object-fit: contain; /* Đảm bảo toàn bộ ảnh hiển thị, có thể có khoảng trắng */
       display: block;
       border: 3px solid var(--vintage-accent);
       padding: 5px;
       background-color: white;
       margin: 0;
-      opacity: 1; /* Luôn visible */
-      transform: none; /* Bỏ transform để không xung đột */
+      opacity: 1;
+      transform: none;
       box-shadow: 0 2px 8px var(--shadow-light);
     }
 
@@ -419,8 +417,8 @@
     .carousel-indicators {
       display: flex;
       justify-content: center;
-      margin-top: 1.5rem; /* Khoảng cách từ carousel */
-      margin-bottom: 1.5rem; /* Khoảng cách tới đoạn văn bản */
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
     }
 
     .indicator-dot {
@@ -431,32 +429,32 @@
       margin: 0 5px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      opacity: 0.5; /* Mờ hơn khi không active */
+      opacity: 0.5;
     }
 
     .indicator-dot.active {
       background-color: var(--vintage-dark);
       opacity: 1;
-      transform: scale(1.2); /* Phóng to hơn khi active */
+      transform: scale(1.2);
     }
 
-    /* Lớp phủ hướng dẫn MỚI VỚI HIỆU ỨNG MŨI TÊN */
+    /* Lớp phủ hướng dẫn */
     .carousel-fade {
         position: absolute;
         top: 0;
-        height: 100%;
         width: 80px;
         pointer-events: none;
         z-index: 11;
-        opacity: 0; /* Mặc định ẩn */
+        opacity: 0;
         transition: opacity 0.5s ease-in-out;
-        display: flex; /* Dùng flex để căn giữa mũi tên */
-        align-items: center; /* Căn giữa theo chiều dọc */
-        justify-content: center; /* Căn giữa theo chiều ngang (cho mũi tên) */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto; /* Sẽ được JS điều chỉnh */
     }
 
     .carousel-fade.active {
-        opacity: 1; /* Hiện ra khi có class active */
+        opacity: 1;
     }
 
     .carousel-fade.left {
@@ -479,23 +477,23 @@
         border-style: solid;
         top: 50%;
         transform: translateY(-50%);
-        opacity: 0; /* Ban đầu ẩn */
-        animation-timing-function: ease-out; /* Hiệu ứng mượt hơn */
+        opacity: 0;
+        animation-timing-function: ease-out;
     }
 
     /* Mũi tên bên trái */
     .carousel-fade.left::before {
-        border-width: 10px 10px 10px 0; /* Kích thước mũi tên */
-        border-color: transparent var(--vintage-dark) transparent transparent; /* Màu mũi tên */
-        right: 15px; /* Vị trí mũi tên đầu tiên */
-        animation: slideInLeft 1.5s infinite; /* Animation */
-    }
-
-    .carousel-fade.left::after { /* Mũi tên thứ hai và thứ ba (dùng ::after) */
         border-width: 10px 10px 10px 0;
         border-color: transparent var(--vintage-dark) transparent transparent;
-        right: 30px; /* Vị trí mũi tên thứ hai */
-        animation: slideInLeft 1.5s infinite 0.3s; /* Delay 0.3s */
+        right: 15px;
+        animation: slideInLeft 1.5s infinite;
+    }
+
+    .carousel-fade.left::after {
+        border-width: 10px 10px 10px 0;
+        border-color: transparent var(--vintage-dark) transparent transparent;
+        right: 30px;
+        animation: slideInLeft 1.5s infinite 0.3s;
     }
 
     /* Mũi tên bên phải */
@@ -660,7 +658,7 @@
       margin-bottom: 0;
     }
 
-    /* Điều chỉnh Responsive */
+    /* --- Điều chỉnh Responsive cho màn hình nhỏ hơn 600px (Mobile) --- */
     @media (max-width: 600px) {
       header h1 {
         font-size: 2.2rem;
@@ -719,13 +717,11 @@
         font-size: 1rem;
       }
 
-      .image-carousel {
-        margin: 2rem auto;
-        height: 300px;
-      }
+      /* Ảnh trong carousel trên mobile vẫn theo nguyên tắc động, không cần media query riêng cho .image-carousel */
 
       .carousel-item img {
-        padding: 3px;
+        border: 2px solid var(--vintage-accent); /* Giảm border */
+        padding: 2px; /* Giảm padding ảnh */
       }
 
       .carousel-fade {
@@ -791,7 +787,7 @@
     </section>
 
     <section>
-      <h2><span>Đôi lời của anh</span></h2>
+     <h2><span>Đôi lời của anh</span></h2>
       <p><span>
         Hi bé iu, vậy là đã được nửa năm chính thức chúng ta ở bên nhau. 
         Anh cảm ơn em vì suốt khoảng thời gian qua đã luôn ở bên cạnh anh.
@@ -799,6 +795,8 @@
         Mặc dù có vài sự giúp đỡ nhưng mà cũng do anh thích em nhìu mò phải hongg.
         Lúc em không rep nữa, anh cữ ngỡ mình đã hết cơ hội ròi, nhưng nhờ sự mặt dày của anh nên mới có cơ hội được gặp em nèe.
         Sau đó buổi hẹn đầu theo anh nhớ là ở quán Anchor, 2 đứa cứ ngồi nói được chút rồi im lặng quài à, anh còn nhớ hôm đó anh còn mặc đồ rất xấu nữa =))).
+      </span> 
+      <span>
         Rồi cứ thế dần dần thì được một tháng, anh nghĩ đã đến lúc tỏ tình ròi.
         Lúc đó em chảnh lắm nhenn 😏, em kêu cho thêm thời gian suy nghĩ nên anh quyết định lùi lại hihi.
         Lần đó anh cũng có hơi ovtk một chút nè, anh nghĩ em đang tìm hiểu mối khác cơ đấy :)))).
@@ -815,14 +813,13 @@
         Nhưng bất cứ giây phút, khoảnh khắc nào bên em anh đều rất trân quý.
         Anh trân quý cả những lúc em xóu, như là chuyện ở rạp phim :)))).
         Những điều đó sẽ mãi là một phần trong những kỉ niệm của chúng ta mà hehee 😄.
+        Thật ra lúc đó anh lo lắng dữ lắm, anh sợ em sẽ xảy chuyện gì không hay.
+        Nhưng thật may mắn là em chỉ bị ngộ độc thực phẩm thoii hihi.
+      </span> 
+      <span>
+        Chặng đường vừa qua được đi cùng em anh cảm thấy rất hạnh phúc, anh nghĩ đó là khoảng thời gian khiến anh thay đổi và trưởng thành nhiều nhất.
         
-
-
-
-
-
-
-        Anh xin lỗi vì anh đã làm em buồn cũng khá nhiều lần, nhưng mong em hãy bỏ qua cho anh nhé vì anh cũng đang học cách phát triển để hiểu em hơn.
+        Anh xin lỗi vì trong khoảng thời gian vừa qua anh đã làm em buồn cũng khá nhiều lần, nhưng mong em hãy bỏ qua cho anh nhé vì anh cũng đang học cách phát triển để hiểu em hơn.
         Anh biết anh không tinh tế, đẹp trai, tài giỏi như người khác và đôi lúc cũng cục súc và nặng lời với em nữa.
         Anh sẽ có gắng hoàn thiện bản thân hơn từng ngày để có thể cùng em đi con đường dài nhất có thể.
         Anh trân trọng những giây phút bên nhau, em là cô gái đầu tiên và sẽ mãi là người anh yêu nhất.
@@ -832,10 +829,10 @@
         Khi em buồn hay gặp chuyện gì thì hãy nhớ cho anh biết nhé, anh sẽ ở bên cạnh em bất cứ lúc nào em cần.
         Cảm ơn em vì đã góp niềm vui và hạnh phúc không nhỏ trong cuộc sống của anh.
       </span>
-    <span>
+      <span>
         Anh muốn trang web này sẽ là nơi lưu giữ những kỷ niệm đẹp của chúng ta cho cả hiện tại và sau này, nếu có góp ý gì cứ cho anh biết nhé.
         Iu em nhìu lém, bé iu của anhh 💖
-    </span>
+      </span>
     </p>
       <img src="./VidAndImg/em5.JPG" alt="Cafe vintage" />
     </section>
@@ -865,7 +862,7 @@
       </div>
       <div class="carousel-indicators">
         </div>
-      <p style="text-align: center;"><span>Những bức ảnh luôn mang theo một câu chuyện riêng, một phần của dòng thời gian đã trôi qua.</span></p>
+      <p style="text-align: center;"><span>Những bức ảnh cũ luôn mang theo một câu chuyện riêng, một phần của dòng thời gian đã trôi qua.</span></p>
     </section>
 
 
@@ -873,11 +870,11 @@
     <section class="video-section">
       <h2><span>Video photobooth nìa</span></h2>
       <div class="video-container">
-        <video id="backgroundVideo" src="./VidAndImg/ptbVid2.MP4" loop muted playsinline preload="auto"></video>
+        <video id="backgroundVideo" src="./VidAndImg/ptbVid1.MOV" loop muted playsinline preload="auto"></video>
       </div>
 
       <div class="video-container">
-        <video id="secondVideo" src="./VidAndImg/ptbVid1.MOV" loop muted playsinline preload="auto"></video>
+        <video id="secondVideo" src="./VidAndImg/ptbVid2.MP4" loop muted playsinline preload="auto"></video>
       </div>
 
       <p><span>Lần đầu nhìn buồn cười nma lần sau nhìn dth quá àaaa 😆.</span></p>
@@ -920,7 +917,7 @@
         }
       });
     }, {
-      threshold: 1.0
+      threshold: 0.5
     });
 
     // Chỉ quan sát ảnh trong các section không phải carousel
@@ -945,64 +942,110 @@
     const textElement = document.getElementById('typewriter-text');
     const text = "💌 Thư cho em 💌";
     let i = 0;
-    let typeWriterDelay = 120; // Đổi tên biến để tránh trùng lặp
+    let typeWriterDelay = 100;
 
     function typeWriter() {
-      if (i <= text.length) { // Chỉnh sửa điều kiện vòng lặp
+      if (i <= text.length) {
         textElement.textContent = text.substring(0, i);
         i++;
         setTimeout(typeWriter, typeWriterDelay);
       }
     }
 
-    // Chạy typewriter khi DOM đã tải xong
     document.addEventListener('DOMContentLoaded', typeWriter);
 
 
-    // Logic cho Carousel ảnh ĐÃ CẬP NHẬT HOÀN TOÀN
+    // Logic cho Carousel ảnh
     const carousel = document.querySelector('.image-carousel');
     const carouselInner = document.querySelector('.carousel-inner');
     const carouselItems = document.querySelectorAll('.carousel-item');
     const totalItems = carouselItems.length;
     const carouselIndicatorsContainer = document.querySelector('.carousel-indicators');
+    const carouselImgs = document.querySelectorAll('.carousel-item img');
 
-    // Thiết lập biến CSS để tính toán chiều rộng của carousel-inner
     carouselInner.style.setProperty('--total-carousel-items', totalItems);
 
-    // Thêm biến cho lớp phủ hướng dẫn
     const carouselFadeLeft = document.querySelector('.carousel-fade.left');
     const carouselFadeRight = document.querySelector('.carousel-fade.right');
 
     let currentIndex = 0;
     let autoSlideInterval = null;
-    const slideDuration = 3000; // Thời gian chuyển ảnh tự động (ms)
-    let inactivityTimer = null; // Timer cho việc hiển thị lại mũi tên
-    const indicatorFadeDelay = 5000; // Thời gian không hoạt động trước khi hiển thị lại mũi tên (ms)
+    const slideDuration = 3000;
+    let inactivityTimer = null;
+    const indicatorFadeDelay = 5000;
 
     let isDragging = false;
     let startPos = 0;
     let currentTranslate = 0;
     let prevTranslate = 0;
-    let animationId; // Biến để quản lý requestAnimationFrame
+    let animationId;
+
+    // Hàm: Tính toán và điều chỉnh chiều cao của carousel tổng thể dựa trên ảnh hiện tại
+    function adjustCarouselHeight() {
+        // Lấy giá trị padding từ CSS đã tính toán box-sizing
+        const computedStyle = getComputedStyle(carousel);
+        // Đảm bảo lấy cả padding top và padding bottom
+        const paddingTop = parseFloat(computedStyle.paddingTop);
+        const paddingBottom = parseFloat(computedStyle.paddingBottom);
+        const paddingOffset = paddingTop + paddingBottom; // Tổng padding dọc
+
+        const currentImage = carouselItems[currentIndex].querySelector('img');
+        // Chiều rộng khả dụng cho nội dung ảnh bên trong padding của .image-carousel
+        const innerContentWidth = carousel.clientWidth - parseFloat(computedStyle.paddingLeft) - parseFloat(computedStyle.paddingRight);
+
+        let desiredInnerHeight = 0; // Chiều cao mong muốn cho phần nội dung bên trong (carousel-inner)
+
+        if (currentImage && currentImage.naturalWidth && currentImage.naturalHeight) {
+            const imageAspectRatio = currentImage.naturalWidth / currentImage.naturalHeight; // Tỷ lệ rộng/cao của ảnh
+            
+            // Tính toán chiều cao dựa trên việc ảnh vừa vặn với chiều rộng khả dụng của carousel-inner
+            let calculatedHeight = innerContentWidth / imageAspectRatio;
+
+            // Giới hạn chiều cao tối đa của carousel bằng 80% chiều cao viewport
+            // Trừ đi paddingOffset để tính chiều cao thực cho phần nội dung bên trong
+            const maxAllowedInnerHeight = window.innerHeight * 0.8 - paddingOffset;
+
+            // Chọn chiều cao nhỏ hơn giữa chiều cao tính toán và chiều cao tối đa cho phép
+            desiredInnerHeight = Math.min(calculatedHeight, maxAllowedInnerHeight);
+
+            // Nếu ảnh quá nhỏ theo chiều rộng, và chiều cao tính toán quá bé,
+            // chúng ta có thể đặt một chiều cao tối thiểu để carousel không bị quá lùn.
+            // Ví dụ: tối thiểu là 150px hoặc 20% chiều rộng của container
+            const minHeightThreshold = Math.max(150, innerContentWidth * 0.2); 
+            desiredInnerHeight = Math.max(desiredInnerHeight, minHeightThreshold);
+
+        } else {
+            // Fallback nếu ảnh chưa tải hoặc lỗi (tỷ lệ 16:9)
+            const fallbackAspectRatio = 16 / 9; // Tỷ lệ 16:9
+            desiredInnerHeight = innerContentWidth / fallbackAspectRatio;
+        }
+
+        // Đặt chiều cao cho carousel ngoài và các lớp phủ
+        // Chiều cao của carousel = chiều cao nội dung mong muốn + tổng padding dọc
+        carousel.style.height = `${desiredInnerHeight + paddingOffset}px`;
+        // Đặt chiều cao cho các lớp phủ bằng chiều cao tổng của carousel để chúng che phủ đúng
+        carouselFadeLeft.style.height = `${desiredInnerHeight + paddingOffset}px`;
+        carouselFadeRight.style.height = `${desiredInnerHeight + paddingOffset}px`;
+    }
+
 
     // Tạo các dấu chấm chỉ thị
     function createIndicatorDots() {
-      carouselIndicatorsContainer.innerHTML = ''; // Xóa các chấm cũ (nếu có)
-      if (totalItems > 1) { // Chỉ tạo dấu chấm nếu có nhiều hơn 1 ảnh
+      carouselIndicatorsContainer.innerHTML = '';
+      if (totalItems > 1) {
         for (let i = 0; i < totalItems; i++) {
           const dot = document.createElement('div');
           dot.classList.add('indicator-dot');
           dot.dataset.index = i;
           dot.addEventListener('click', () => {
             currentIndex = i;
-            updateCarousel(true); // Truyền true để báo hiệu là tương tác người dùng
+            updateCarousel(true);
           });
           carouselIndicatorsContainer.appendChild(dot);
         }
         updateIndicatorDots();
-        // Không gọi showFadeEffect() ở đây, sẽ gọi qua timer nếu không có tương tác
       } else {
-        hideFadeEffect(); // Ẩn hiệu ứng mờ/mũi tên nếu chỉ có 1 ảnh
+        hideFadeEffect();
       }
     }
 
@@ -1028,17 +1071,15 @@
     }
 
     // Cập nhật toàn bộ trạng thái carousel (vị trí ảnh, dấu chấm, hẹn giờ)
-    // Thêm tham số `isUserInteraction` để kiểm soát hiển thị mũi tên
     function updateCarousel(isUserInteraction = false) {
-      // Lấy chiều rộng thực tế của một carousel-item, bao gồm cả padding
-      const itemWidth = carouselItems[0].offsetWidth; // Lấy chiều rộng của item đầu tiên
+      const itemWidth = carouselItems[0].offsetWidth; // Lấy chiều rộng hiện tại của một item
       currentTranslate = currentIndex * -itemWidth;
 
       setSliderTransform();
-      updateIndicatorDots(); // Cập nhật dấu chấm mỗi khi chuyển ảnh
-      resetAutoSlideTimer(); // Đặt lại bộ hẹn giờ tự động chạy slide
+      updateIndicatorDots();
+      adjustCarouselHeight(); // Điều chỉnh chiều cao của carousel
 
-      // Chỉ reset và ẩn mũi tên nếu là tương tác người dùng
+      resetAutoSlideTimer();
       if (isUserInteraction) {
         resetIndicatorFadeTimer();
       }
@@ -1047,7 +1088,7 @@
     // Di chuyển slide theo hướng (1 cho tiếp theo, -1 cho trước đó)
     function moveSlide(direction) {
       currentIndex = (currentIndex + direction + totalItems) % totalItems;
-      updateCarousel(false); // isUserInteraction = false khi tự động chạy
+      updateCarousel(false);
     }
 
     // Bắt đầu chế độ tự động chạy slide
@@ -1055,7 +1096,7 @@
       if (autoSlideInterval) {
         clearInterval(autoSlideInterval);
       }
-      if (totalItems > 1) { // Chỉ tự động chạy nếu có nhiều hơn 1 ảnh
+      if (totalItems > 1) {
         autoSlideInterval = setInterval(() => {
           moveSlide(1);
         }, slideDuration);
@@ -1070,33 +1111,31 @@
       }
     }
 
-    // Đặt lại bộ hẹn giờ tự động chạy khi có tương tác (áp dụng cho slide tự động)
+    // Đặt lại bộ hẹn giờ tự động chạy khi có tương tác
     function resetAutoSlideTimer() {
       stopAutoSlide();
-      // Chúng ta sẽ dùng inactivityTimer để kích hoạt lại autoSlide
       clearTimeout(inactivityTimer);
       inactivityTimer = setTimeout(() => {
         startAutoSlide();
-        showFadeEffect(); // Sau 5s không tương tác, hiển thị mũi tên
-      }, indicatorFadeDelay); // Dùng cùng delay với mũi tên để đồng bộ
+        showFadeEffect();
+      }, indicatorFadeDelay);
     }
 
-    // Reset timer hiển thị mũi tên hướng dẫn (chỉ khi người dùng tương tác)
+    // Reset timer hiển thị mũi tên hướng dẫn
     function resetIndicatorFadeTimer() {
-        clearTimeout(inactivityTimer); // Xóa timer hiện tại (bao gồm cả auto slide)
-        hideFadeEffect(); // Ẩn ngay lập tức khi có tương tác
+        clearTimeout(inactivityTimer);
+        hideFadeEffect();
         if (totalItems > 1) {
             inactivityTimer = setTimeout(() => {
-                showFadeEffect(); // Hiển thị lại sau delay nếu không có tương tác nào nữa
-                startAutoSlide(); // Khởi động lại auto slide
+                showFadeEffect();
+                startAutoSlide();
             }, indicatorFadeDelay);
         }
     }
 
-
     // Hiển thị lớp phủ hướng dẫn
     function showFadeEffect() {
-        if (totalItems > 1) { // Chỉ hiển thị nếu có nhiều hơn 1 ảnh
+        if (totalItems > 1) {
             carouselFadeLeft.classList.add('active');
             carouselFadeRight.classList.add('active');
         }
@@ -1107,7 +1146,6 @@
         carouselFadeLeft.classList.remove('active');
         carouselFadeRight.classList.remove('active');
     }
-
 
     // --- Kéo/Vuốt ảnh ---
     carousel.addEventListener('mousedown', dragStart);
@@ -1120,22 +1158,22 @@
     carousel.addEventListener('touchmove', drag);
 
     function dragStart(event) {
-      carouselInner.style.transition = 'none'; // Tắt transition khi bắt đầu kéo để mượt mà
-      stopAutoSlide(); // Dừng tự động chạy khi kéo
-      hideFadeEffect(); // Ẩn mũi tên ngay lập tức khi bắt đầu kéo
+      carouselInner.style.transition = 'none';
+      stopAutoSlide();
+      hideFadeEffect();
 
       isDragging = true;
       startPos = getPositionX(event);
-      prevTranslate = currentTranslate; // Lưu lại vị trí hiện tại trước khi kéo
+      prevTranslate = currentTranslate;
 
       if (event.type === 'mousedown') {
-        event.preventDefault(); // Ngăn kéo ảnh bị lỗi trên desktop
+        event.preventDefault();
       }
-      animationId = requestAnimationFrame(animation); // Bắt đầu vòng lặp animation cho kéo
+      animationId = requestAnimationFrame(animation);
     }
 
     function animation() {
-      setSliderTransform(); // Cập nhật vị trí ảnh liên tục
+      setSliderTransform();
       if (isDragging) {
         requestAnimationFrame(animation);
       }
@@ -1145,34 +1183,32 @@
       if (!isDragging) return;
 
       const currentPosition = getPositionX(event);
-      const diff = currentPosition - startPos; // Khoảng cách đã kéo
-      currentTranslate = prevTranslate + diff; // Vị trí mới dựa trên kéo
+      const diff = currentPosition - startPos;
+      currentTranslate = prevTranslate + diff;
     }
 
     function dragEnd() {
-      cancelAnimationFrame(animationId); // Dừng vòng lặp animation
+      cancelAnimationFrame(animationId);
       isDragging = false;
-      carouselInner.style.transition = 'transform 0.5s ease-in-out'; // Bật lại transition cho chuyển động mượt
+      carouselInner.style.transition = 'transform 0.5s ease-in-out';
 
-      const movedBy = currentTranslate - prevTranslate; // Tổng khoảng cách đã di chuyển
-      // Lấy chiều rộng thực tế của một carousel item
+      const movedBy = currentTranslate - prevTranslate;
       const itemWidth = carouselItems[0].offsetWidth;
 
-      // Xác định slide mới dựa trên quãng đường kéo (lớn hơn 1/4 chiều rộng slide thì chuyển)
-      if (movedBy < -itemWidth / 4) { // Kéo sang trái đủ xa -> chuyển slide tiếp theo
+      if (movedBy < -itemWidth / 4) {
         currentIndex = (currentIndex + 1 + totalItems) % totalItems;
-      } else if (movedBy > itemWidth / 4) { // Kéo sang phải đủ xa -> chuyển slide trước đó
+      } else if (movedBy > itemWidth / 4) {
         currentIndex = (currentIndex - 1 + totalItems) % totalItems;
       }
 
-      updateCarousel(true); // Gọi updateCarousel với isUserInteraction = true
+      updateCarousel(true);
     }
 
-    // Xử lý khi cửa sổ thay đổi kích thước để carousel không bị lỗi hiển thị
+    // Xử lý khi cửa sổ thay đổi kích thước
     window.addEventListener('resize', () => {
-      carouselInner.style.transition = 'none'; // Tắt transition khi resize để tránh giật
-      updateCarousel(false); // Gọi updateCarousel nhưng không coi là tương tác người dùng
-      // Sau khi resize, đặt lại timer để mũi tên hiển thị lại nếu không có tương tác
+      carouselInner.style.transition = 'none';
+      adjustCarouselHeight();
+      updateCarousel(false);
       if (totalItems > 1) {
           resetIndicatorFadeTimer();
       } else {
@@ -1180,11 +1216,54 @@
       }
     });
 
+    // Hàm để đảm bảo tất cả ảnh trong carousel đã tải xong trước khi tính toán tỷ lệ khung hình
+    function loadCarouselImages() {
+        let loadedCount = 0;
+        const totalCarouselImages = carouselImgs.length;
+
+        if (totalCarouselImages === 0) {
+            createIndicatorDots();
+            updateCarousel(false);
+            resetAutoSlideTimer();
+            return;
+        }
+
+        carouselImgs.forEach(img => {
+            if (img.complete) {
+                loadedCount++;
+            } else {
+                img.addEventListener('load', () => {
+                    loadedCount++;
+                    if (loadedCount === totalCarouselImages) {
+                        console.log("All carousel images loaded!");
+                        createIndicatorDots();
+                        updateCarousel(false);
+                    }
+                });
+                img.addEventListener('error', () => {
+                    loadedCount++;
+                    console.error("Error loading carousel image:", img.src);
+                    if (loadedCount === totalCarouselImages) {
+                        console.log("Attempted to load all carousel images (some might have failed).");
+                        createIndicatorDots();
+                        updateCarousel(false);
+                    }
+                });
+            }
+        });
+
+        if (loadedCount === totalCarouselImages) {
+            console.log("All carousel images were already loaded!");
+            createIndicatorDots();
+            updateCarousel(false);
+        }
+    }
+
+
     document.addEventListener('DOMContentLoaded', () => {
-      createIndicatorDots(); // Tạo các chấm khi DOM tải xong
-      updateCarousel(false); // Cập nhật vị trí ảnh ban đầu (không phải tương tác người dùng)
-      resetAutoSlideTimer(); // Bắt đầu hẹn giờ tự động chạy slide
+      loadCarouselImages();
     });
+
 
     // --- Logic cho Video tự động phát khi cuộn đến ---
     const videoElement = document.getElementById('backgroundVideo');
@@ -1256,11 +1335,7 @@
 
 
 
-
-
-
-
-
+    
 
     // --- Logic cho hiệu ứng xuất hiện chữ ký ---
     const signatureBlock = document.querySelector('.signature-block');
@@ -1272,7 +1347,7 @@
         }
       });
     }, {
-      threshold: 0.7
+      threshold: 0.2
     });
 
     signatureObserver.observe(signatureBlock);
@@ -1287,7 +1362,7 @@
         }
       });
     }, {
-      threshold: 0.7
+      threshold: 0.2
     });
 
     cuteNotesObserver.observe(cuteNotesSection);
